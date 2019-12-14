@@ -1,14 +1,26 @@
-data Matrix a = Matrix [[a]] deriving (Show)
+module MPMatrix 
+(mAdd
+, mSub
+) where
 
-mAdd :: (Num a) => [[a]] -> [[a]] -> [[a]]
-mAdd as bs = combineMatrix (+) as bs
+data Row a = Row [a] deriving (Show)
+data Matrix a = Matrix [Row a] deriving (Show)
 
-mSub :: (Num a) => [[a]] -> [[a]] -> [[a]]
-mSub as bs = combineMatrix (-) as bs
+mAdd :: (Num a) => Matrix a -> Matrix a -> Matrix a
+mAdd x y = combineMatrix (+) x y
 
-combineMatrix :: (Num a) => (a -> a -> a) -> [[a]] -> [[a]] -> [[a]]
-combineMatrix _ [] [] = []
-combineMatrix f (a:as) (b:bs) = (combineList f a b) : (combineMatrix f as bs)
+mSub :: (Num a) => Matrix a -> Matrix a -> Matrix a
+mSub x y = combineMatrix (-) x y
+
+prependRow :: (Num a) => Row a -> Matrix a -> Matrix a
+prependRow row (Matrix rows) = Matrix (row:rows)
+
+combineMatrix :: (Num a) => (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
+combineMatrix _ (Matrix []) (Matrix []) = Matrix []
+combineMatrix f (Matrix (x:xs)) (Matrix (y:ys)) = prependRow (combineRows f x y) (combineMatrix f (Matrix xs) (Matrix ys))
+
+combineRows :: (Num a) => (a -> a -> a) -> Row a -> Row a -> Row a
+combineRows f (Row xs) (Row ys) = Row (combineList f xs ys)
 
 combineList :: (Num a) => (a -> a -> a) -> [a] -> [a] -> [a]
 combineList _ [] [] = []
