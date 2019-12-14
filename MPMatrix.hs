@@ -1,6 +1,7 @@
 module MPMatrix 
-(mAdd
+( mAdd
 , mSub
+, scalarMult
 ) where
 
 data Row a = Row [a] deriving (Show)
@@ -11,6 +12,12 @@ mAdd x y = combineMatrix (+) x y
 
 mSub :: (Num a) => Matrix a -> Matrix a -> Matrix a
 mSub x y = combineMatrix (-) x y
+
+scalarMult :: (Num a) => a -> Matrix a -> Matrix a
+scalarMult x (Matrix rows) = Matrix (map (scalarRowMult x) rows)
+
+scalarRowMult ::(Num a) => a -> Row a -> Row a
+scalarRowMult x (Row xs) = Row (map (*x) xs)
 
 prependRow :: (Num a) => Row a -> Matrix a -> Matrix a
 prependRow row (Matrix rows) = Matrix (row:rows)
