@@ -21,6 +21,9 @@ showMatrix (Matrix rows) = unpack $ strip $ pack $ foldl (\x y -> x ++ "\n" ++ (
 instance (Num a, Show a) => Show (Row a) where
     show = showRow
 
+instance Functor Row where
+    fmap f (Row a) = Row $ map f a
+
 instance (Num a, Show a) => Show (Matrix a) where
     show = showMatrix
 
@@ -34,14 +37,14 @@ scalarMult :: (Num a) => a -> Matrix a -> Matrix a
 scalarMult x (Matrix rows) = Matrix (map (scalarRowMult x) rows)
 
 scalarRowMult :: (Num a) => a -> Row a -> Row a
-scalarRowMult x (Row xs) = Row (map (*x) xs)
+scalarRowMult x row = fmap (*x) row
 
 prependRow :: (Num a) => Row a -> Matrix a -> Matrix a
 prependRow row (Matrix rows) = Matrix (row:rows)
 
 combineMatrix :: (Num a) => (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
 combineMatrix _ (Matrix []) (Matrix []) = Matrix []
-combineMatrix f (Matrix (x:xs)) (Matrix (y:ys)) = prependRow (combineRows f x y) (combineMatrix f (Matrix xs) (Matrix ys))
+combineMatrix f (Matrix (x:xs)) (Matrix (y:ys)) = prependRow (zipRow f x y) (combineMatrix f (Matrix xs) (Matrix ys))
 
-combineRows :: (Num a) => (a -> a -> a) -> Row a -> Row a -> Row a
-combineRows f (Row xs) (Row ys) = Row (zipWith f xs ys)
+zipRow :: (Num a) => (a -> a -> a) -> Row a -> Row a -> Row a
+zipRow f (Row xs) (Row ys) = Row (zipWith f xs ys)

@@ -5,7 +5,7 @@ import MPMatrix
 
 main :: IO ()
 main = hspec $ do
-  describe "Matrix Functions" $ do
+  describe "Matrix functions" $ do
     it "returns the scalar multiple of a given Matrix" $
       scalarMult 2 (Matrix [Row [1,1], Row [1,1]]) `shouldBe` (Matrix [Row [2,2], Row [2,2]])
 
