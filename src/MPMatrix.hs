@@ -44,8 +44,4 @@ combineMatrix _ (Matrix []) (Matrix []) = Matrix []
 combineMatrix f (Matrix (x:xs)) (Matrix (y:ys)) = prependRow (combineRows f x y) (combineMatrix f (Matrix xs) (Matrix ys))
 
 combineRows :: (Num a) => (a -> a -> a) -> Row a -> Row a -> Row a
-combineRows f (Row xs) (Row ys) = Row (combineList f xs ys)
-
-combineList :: (Num a) => (a -> a -> a) -> [a] -> [a] -> [a]
-combineList _ [] [] = []
-combineList f (x:xs) (y:ys) = (f x y) : (combineList f xs ys)
+combineRows f (Row xs) (Row ys) = Row (zipWith f xs ys)
