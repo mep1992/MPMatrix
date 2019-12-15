@@ -2,17 +2,19 @@ module MPMatrix
 ( mAdd
 , mSub
 , scalarMult
+, Row(..)
+, Matrix(..)
 ) where
 
 import Data.Text (strip, pack, unpack)
 
-data Row a = Row [a]
-data Matrix a = Matrix [Row a]
+data Row a = Row [a] deriving (Eq)
+data Matrix a = Matrix [Row a] deriving (Eq)
 
 showRow :: (Num a, Show a) => Row a -> String
 showRow (Row x) = "( " ++ (init $ tail $ show x) ++ " )"
 
-//TODO figure out why this function has a \n at the start to avoid having the Text package
+--TODO figure out why this function has a \n at the start to avoid having the Text package
 showMatrix :: (Num a, Show a) => Matrix a -> String
 showMatrix (Matrix rows) = unpack $ strip $ pack $ foldl (\x y -> x ++ "\n" ++ (show y)) "" rows
 
