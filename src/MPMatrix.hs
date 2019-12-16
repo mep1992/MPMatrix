@@ -24,6 +24,9 @@ instance (Num a, Show a) => Show (Row a) where
 instance Functor Row where
     fmap f (Row a) = Row $ map f a
 
+instance Functor Matrix where
+    fmap f (Matrix rows) = Matrix $ map (fmap f) rows
+
 instance (Num a, Show a) => Show (Matrix a) where
     show = showMatrix
 
@@ -34,10 +37,7 @@ mSub :: (Num a) => Matrix a -> Matrix a -> Matrix a
 mSub x y = combineMatrix (-) x y
 
 scalarMult :: (Num a) => a -> Matrix a -> Matrix a
-scalarMult x (Matrix rows) = Matrix (map (scalarRowMult x) rows)
-
-scalarRowMult :: (Num a) => a -> Row a -> Row a
-scalarRowMult x row = fmap (*x) row
+scalarMult x m = fmap (*x) m
 
 prependRow :: (Num a) => Row a -> Matrix a -> Matrix a
 prependRow row (Matrix rows) = Matrix (row:rows)
